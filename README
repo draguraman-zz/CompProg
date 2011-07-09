@@ -1,0 +1,7 @@
+This is a collection of my solutions for some of the ProjectEuler, USACO and 
+UVa problems.
+Though most of the files out there are not commented, hope it helps someone 
+out there. 
+*.c files should be compiled in C++ since C is "more restrictive". 
+The only drawback is that C++ has stricter type checking which is sometimes
+annoying but could be helpful in catching errors.
