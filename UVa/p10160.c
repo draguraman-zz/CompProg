@@ -1,3 +1,14 @@
+/*
+Algorithm:
+Backtracking with pruning
+Pruning and heuristics:
+- Identify components and backtrack for each component rather than across
+  components
+- Don't backtrack on redundant nodes
+- Try nodes with highest degree first
+- Don't repeat search, for e.g.: If you tried 1,2 then don't try 2,1
+*/
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -31,7 +42,7 @@ int count(mask_t m)
 
 // largest first
 int degcomp1(const void *a, const void *b){
-	return count( nodes[ *(int*)b ].  mask) -
+	return count( nodes[ *(int*)b ].mask) -
 	count( nodes[*(int*)a]. mask);
 }
 
@@ -71,7 +82,7 @@ bool find(int* indices, int start, int steps, mask_t goal, mask_t cur)
 	for (i=start; indices[i] != -1; i++){
 		node_t *node = &nodes[indices[i]];
 		bool b= find(indices,i+1, steps-1,goal, cur | node->mask);
-		if (b) return b;//f < min) min = f;
+		if (b) return b;
 	}
 	return false;
 }
@@ -143,9 +154,9 @@ while (1){
 		scanf("%d%d", &a,&b);
 		if (adj[a][b] || adj[b][a]) continue;
 		adj[a][b] = adj[b][a] = 1;
-		nodes[a].mask |= ((mask_t) 1 << b )|((mask_t)1 << a);
+		nodes[a].mask |= ((mask_t) 1 << b );
 		nodes[a].nei[ nodes[a].neicount ++] = b;
-		nodes[b].mask |= ((mask_t) 1 << b )|((mask_t)1 << a);
+		nodes[b].mask |= ((mask_t)1 << a);
 		nodes[b].nei[ nodes[b].neicount ++] = a;
 	}
 	doit();
