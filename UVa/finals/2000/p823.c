@@ -191,7 +191,14 @@ int main()
 			&sm[0],&big[0],&sm[1],&big[1],&sm[2],&big[2]);
 		if ((ia|ib|ic)==0) break;
 		a = (double)ia; b =(double)ib;c=(double)ic;
-		printf("Triangle number %d:\n", casen);casen++;
+
+		double alpha2 = acos((a*a+c*c-b*b)/(2*a*c));
+		double xx = a*cos(alpha2);
+		if (xx < c/2){
+			double t = b;
+			b=a;
+			a=t;
+		}
 
 		bool ok = doit();
 		if (!ok){
@@ -204,6 +211,7 @@ int main()
 			ok = doit();
 		}
 
+		printf("Triangle number %d:\n", casen);casen++;
 		if (ok) printf("All three stoppers will fit in the"
 		   			" triangular space\n");
 		else printf("Stoppers will not fit in the triangular space\n");
