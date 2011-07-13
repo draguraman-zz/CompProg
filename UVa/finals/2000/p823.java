@@ -1,8 +1,12 @@
+/*
+ * A visual debugging tool.
+ * Click on the triangle corners and drag it around to resize
+ * I still can't figure out what's wrong with my solution!
+ * */
+
 import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
-
-
 
 public class p823 extends  JPanel implements MouseListener,
        MouseMotionListener
@@ -61,7 +65,83 @@ public class p823 extends  JPanel implements MouseListener,
     private double cos(double x){return Math.cos(x);}
     private double sin(double x){return Math.sin(x);}
 
-    private void calc(){
+    // assumes circle center at (0,0) with radiius r
+// line segment is [x1,y1] - [x2,y2]
+private boolean circleLineIntersect(
+	double r, double x1, double y1, double x2, double y2
+)
+{
+	double dx = x2-x1;
+	double dy = y2-y1;
+	double dr2 = (dx*dx+dy*dy);
+	double D = x1*y2 - x2*y1;
+    double det = r*r * dr2 - D*D;
+    return det >= 0.0;
+}
+
+private boolean circleLineInter(
+double x, double y, double r, double x1, double y1, double x2, double y2)
+{
+	return circleLineIntersect(
+		r, x1-x, y1-y, x2-x, y2-y
+	);
+}
+
+// circle 1 : radius r1 
+// circle 2 : radius r2 
+// distance dd between their centers
+private boolean circlesIntersect(double r1, double r2, double dd)
+{
+	if(dd >= r1+r2) return false;
+	return true;
+}
+
+private boolean cc(int i1,int i2){
+
+		double dx = x[i1]-x[i2];
+		double dy = y[i1]-y[i2];
+		double dd = Math.sqrt(dx*dx+dy*dy);
+	if(inv[i1] != inv[i2]){// both diff orientation
+		return (circlesIntersect(big[i1]/2,sm[i2]/2,dd) ||
+		    circlesIntersect(sm[i1]/2, big[i2]/2,dd));
+	}else
+	{
+		return (circlesIntersect(big[i1]/2,big[i2]/2,dd) ||
+		    circlesIntersect(sm[i1]/2, sm[i2]/2,dd));
+	}
+}
+
+double cross(double a, double b, double c, double d)
+{
+	return a*d-b*c;
+}
+
+boolean sameSide(
+double p1x, double p1y, 
+double p2x, double p2y,
+double ax, double ay,
+double bx,double by){
+
+	double cp1 = cross(bx-ax, by-ay, p1x-ax,p1y-ay);	
+	double cp2 = cross(bx-ax, by-ay, p2x-ax,p2y-ay);	
+	if (cp1*cp2 >= 0.0) return true;
+	return false;
+}
+
+boolean inTri(
+double x, double y,
+double ax, double ay, 
+double bx, double by,
+double cx, double cy){
+	
+	if (
+	sameSide(x,y,ax,ay,bx,by,cx,cy) &&
+	sameSide(x,y,bx,by,ax,ay,cx,cy) &&
+	sameSide(x,y,cx,cy,ax,ay,bx,by)) return true;
+	return false;
+}
+
+    private boolean calc(){
 
 
 	y[0] = big[0]/2.0;
@@ -72,8 +152,8 @@ public class p823 extends  JPanel implements MouseListener,
 	double t1 = a*Math.cos(alpha*2);
 
 	// check inter with side b
-//	if (circleLineInter(x[0],y[0],y[0],t1,t2,
-//		c,0)) return false;
+	if (circleLineInter(x[0],y[0],y[0],t1,t2,
+		c,0)) return false;
 
 	double gamma = acos((a*a+b*b-c*c)/(2*a*b))/2;
 	double e= Math.PI/2 - 2*alpha - gamma;
@@ -82,15 +162,30 @@ public class p823 extends  JPanel implements MouseListener,
 	x[1] = a*cos(alpha*2) - h *sin(e);
 	
 	//check inter with side c
-//	if (circleLineInter(x[1],y[1],big[1]/2.0,0,0,
-//		c,0)) return false;
+	if (circleLineInter(x[1],y[1],big[1]/2.0,0,0,
+		c,0)) return false;
 
-//	if (cc(big,sm,inv,x,y,0,1)) return false;
+	if (cc(0,1)) return false;
 
 	double beta = acos((c*c+b*b-a*a)/(2*c*b))/2;
 	y[2] = big[2]/2;
 	x[2] = c-y[2]/tan(beta);
+	
 
+	if (circleLineInter(x[2],y[2],big[2]/2.0,t1,t2,
+		0,0)) return false;
+
+	
+	if (cc(1,2)) return false;
+	if (cc(0,2)) return false;
+
+	int i;
+	for(i=0;i<3;i++){
+		if (!inTri(x[i],y[i],
+			0,0,t1,t2,c,0))return false;
+	}
+
+	return true;
     }
 
     public p823(){
@@ -101,9 +196,9 @@ public class p823 extends  JPanel implements MouseListener,
         blank.addMouseListener(this);
         */
 
-        big[0] = 30;
+        big[0] = 50;
         big[1] = 30;
-        big[2] = 30;
+        big[2] = 90;
         sm[0] = 15;
         sm[1] = 15;
         sm[2] = 15;
@@ -162,6 +257,7 @@ public class p823 extends  JPanel implements MouseListener,
         
     public void mouseReleased(MouseEvent e) {
         down=false;
+        sel= -1;
     }
             
     public void mouseMoved(MouseEvent e) {
@@ -190,8 +286,8 @@ public class p823 extends  JPanel implements MouseListener,
          dy = py[1] - py[2];
         b = Math.sqrt(dx*dx+dy*dy);
 
-        
-
+        if (!calc()) frame.setTitle("impossible");
+        else frame.setTitle("possible");
         paint(g);
     }
     public void mouseEntered(MouseEvent e) {
