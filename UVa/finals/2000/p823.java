@@ -196,9 +196,9 @@ double cx, double cy){
         blank.addMouseListener(this);
         */
 
-        big[0] = 50;
+        big[0] = 190;
         big[1] = 30;
-        big[2] = 90;
+        big[2] = 50;
         sm[0] = 15;
         sm[1] = 15;
         sm[2] = 15;
