@@ -81,7 +81,8 @@ class jobcomp
         if (k!=0) return k>0;
         k = pa.id - pb.id;
         if (k!=0) return k>0;
-        return true;
+
+        return true; // shouldn't reach here since all persons have diff id's...
     }
 };
 
@@ -92,9 +93,14 @@ void handle(int time){
     int i;
     // loop thru each person and each job and push to jobq
     for (i=0;i<numpersons;i++){
+
+        // skip if person not free at this time
         if (persons[i].free > time) continue;
+
         for (int j = 0; j < list.size();j++){
             const req_t & r = list[j];
+
+            // person can handle this topic?
             if (persons[i].prio.find(r.id) != persons[i].prio.end())
             {
                 job_t jo;
@@ -107,6 +113,7 @@ void handle(int time){
     }
 
     int numdone=0;
+    // job assigning loop
     while (jobq.size())
     {
         job_t j = jobq.top(); jobq.pop();
@@ -119,6 +126,9 @@ void handle(int time){
         // skip if person already has job
         if (p.free > time) continue;
         
+        // changing the last job field will "corrupt"
+        // the state of the jobq but it is not a problem
+        // since we already check whether person has job beforehand
         p.last_job = time;
         p.free = time + timeneed[r.id];
         done[j.ridx] = true;
