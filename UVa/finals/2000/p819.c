@@ -1,27 +1,41 @@
-
+/*
+ * Algorithm:
+ * Brute force plus "iterative deepening"
+ * First rotate the polygon 360 degrees and locate global min/max area 
+ * of bounding rectangle.
+ * Then that will be the estimates
+ * Find bounding intervals for the min/max area.
+ * You'd need to recursively zoom into the bounding interval until
+ * they are accurate to 3 decimal places.
+ * 
+ * There might be some proper algorithm to do it, but I don't know of any
+ *
+ * Gotchas:
+ * - It's hard to tell whether your answer is correct.
+ * */
 #include<stdlib.h>
 #include<string.h>
 #include<stdio.h>
 #include<math.h>
 #include<limits.h>
 #include<float.h>
-typedef double dbl;
 
-#define PI ((dbl)3.141592653589793238462383)
-int x[200];
-int y[200];
+typedef long double dbl;
+
+#define PI ((dbl)3.1415926535897932384623832795)
+dbl x[200];
+dbl y[200];
 int n;
-dbl xx[200];
-dbl yy[200];
 int casen=1;
 
 inline dbl abs(dbl x){return x>=0 ? x:-x;}
+inline dbl min(dbl x,dbl y){ return x<y?x:y; }
 
 #define PP \
-    dbl xmax = DBL_MIN;\
-    dbl xmin = DBL_MAX;\
-    dbl ymax = DBL_MIN;\
-    dbl ymin = DBL_MAX;\
+    dbl xmax = 0;\
+    dbl xmin = 0;\
+    dbl ymax = 0;\
+    dbl ymin = 0;\
         for (i=0;i<n;i++){\
             dbl s = sin(a);\
             dbl c = cos(a);\
@@ -32,66 +46,110 @@ inline dbl abs(dbl x){return x>=0 ? x:-x;}
             if (y2 < ymin) ymin = y2;\
             else if (y2 > ymax) ymax = y2;\
         }\
-        dbl aa = (xmax - xmin)*(ymax-ymin);\
+        dbl aa = (xmax - xmin)*(ymax-ymin);
+
+#define UPDATE \
         if (aa > max) {max =aa;amax = a;}\
         else if (aa < min) {min = aa;amin=a;}
 
+dbl getMin(dbl min, dbl aL, dbl aR)
+{
+    while(1)
+    {
+        const dbl incre = (aR-aL)/1000;
+        dbl a = aL;
+        const dbl oldmin = min;
+        while(a <= aR+incre*2)
+        {
+            int i;
+            PP
+            if (aa < min){ min = aa; aL = a-incre/2; aR = a+incre/2; }
+            a += incre;
+        }
+
+        if (abs(min - oldmin) < 0.0000001) return min;
+    }
+}
+
+dbl getMax(dbl max, dbl aL, dbl aR)
+{
+    while(1)
+    {
+        const dbl incre = (aR-aL)/1000;
+        dbl a = aL;
+        const dbl oldmax = max;
+        while(a <= aR+incre*2)
+        {
+            int i;
+            PP
+            if (aa > max){ max = aa; aL = a-incre/2; aR = a+incre/2; }
+            a += incre;
+        }
+
+        if (abs(max - oldmax) < 0.0000001) return max;
+    }
+}
+
 void doit(){
-    dbl incre =PI / 20000.0;
-    dbl a = 0;
-    dbl min = DBL_MAX;
-    dbl max = DBL_MIN;
-    dbl amin = DBL_MAX;
-    dbl amax = 0;
-    while (a <= 2*PI){
-        int i,j;
-        a+=incre;
-        PP
-    }
-
-    incre = PI/2000000.0;
-    a = amin;
-    dbl prevA = -1;
-    while (a >= 0){
-        int i,j;
-        a-=incre;
-        PP
-        if (prevA >= 0 && prevA < aa)break;
-        prevA = aa;
+    dbl incre =PI / (1000000.0/n);
+    dbl min = DBL_MAX; // min area
+    dbl max = 0;       // max area
     
-    }
-    a = amin;
-     prevA = -1;
-    while (a <= 2*PI){
-        int i,j;
-        a+=incre;
+    dbl a = 0;         // cur angle
+    dbl amin = 0;      // angle related to min area
+    dbl amax = 0;      // angle related to max area
+    dbl stop = 2*PI+incre*2; // overrun a little to be safe
+    int i,j;
+
+    // estimate global  min and max area
+    while (a <= stop){
         PP
-        if (prevA >= 0 && prevA < aa)break;
-        prevA = aa;
+        UPDATE
+        a+=incre;
     }
 
-    a=amax;
-     prevA = -1;
-    while (a >=0){
-        int i,j;
-        a-=incre;
+    // find interval bound
+    incre/=(1<<12);
+    dbl aR;
+    a=amin;
+    while(1){
+        a +=incre;
         PP
-        if (prevA >= 0 && prevA > aa)break;
-        prevA = aa;
+        if (aa > min){break;}
     }
-    a=amax;
-     prevA = -1;
-    while (a <= 2*PI){
-        int i,j;
-        a+=incre;
+    aR=a;
+
+    a=amin;
+    while(1){
+        a -=incre;
         PP
-        if (prevA >= 0 && prevA > aa)break;
-        prevA = aa;
+        if (aa > min){break;}
     }
 
-    printf("Gift %d:\n",casen);
-    printf("Minimum area = %.3lf\n", min);
-    printf("Maximum area = %.3lf\n\n", max);
+    min=getMin(min,a,aR);
+
+    printf("Gift %d\n",casen);
+    printf("Minimum area = %.3Lf\n", min);
+    
+    // find interval bound
+    a=amax;
+    while(1){
+        a +=incre;
+        PP
+        if (aa < max){break;}
+    }
+    aR=a;
+
+    a=amax;
+    while(1){
+        a -=incre;
+        PP
+        if (aa < max){break;}
+    }
+    
+    max=getMax(max,a,aR);
+
+    printf("Maximum area = %.3Lf\n\n", max);
     casen++;
 }
 
@@ -100,11 +158,12 @@ int main()
     while(1){
         scanf("%d",&n);
         if (n==0) break;
-        int i,j,k;
-        scanf("%d%d",&x[0], &y[0]);
+        int i,j,k,xx0,yy0,xx,yy;
+        scanf("%d%d",&xx0, &yy0);
         for (i=1;i<n;i++){
-            scanf("%d%d",&x[i],&y[i]);
-            x[i]-=x[0]; y[i]-=y[0];
+            scanf("%d%d",&xx,&yy);
+            x[i] = (dbl)(xx-xx0);
+            y[i] = (dbl)(yy-yy0);
         }
         x[0]=y[0]=0;
         doit();
