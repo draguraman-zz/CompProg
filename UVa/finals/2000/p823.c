@@ -193,6 +193,7 @@ bool doit()
 
 int main()
 {
+    int f=0;
     while(1){
         int ia, ib, ic; 
         scanf("%d%d%d%lf%lf%lf%lf%lf%lf", &ia,&ib,&ic,
@@ -200,6 +201,7 @@ int main()
         if ((ia|ib|ic)==0) break;
         a = (double)ia; b =(double)ib;c=(double)ic;
 
+        if (f) printf("\n\n"); f=1;
         double alpha2 = acos((a*a+c*c-b*b)/(2*a*c));
         double xx = a*cos(alpha2);
         if (xx < c/2){
@@ -223,8 +225,8 @@ int main()
 
         printf("Triangle number %d:\n", casen);casen++;
         if (ok) printf("All three stoppers will fit in the"
-                    " triangular space\n\n");
-        else printf("Stoppers will not fit in the triangular space\n\n");
+                    " triangular space");
+        else printf("Stoppers will not fit in the triangular space");
     }
     return 0;
 }
