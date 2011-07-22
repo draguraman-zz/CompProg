@@ -1,54 +1,42 @@
+/**
+ * Algorithm:
+ * Brute force backtracking + bitmasks
+ *
+ * Bitmasks really help...
+ * I used an array based approach at first but it timed out.
+ *
+ * */
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
 
-
-char board[16][16];
-char d1[50];
-char d2[50];
-char col[50];
+int board[20];
 int cnt;
 int n;
 
-void find(int r)
+// r is the zero-based row index
+// col is the column mask -- ones means occupied
+// d1 is the topleft - bottomright mask -- ones mean occupied
+// d2 is the topright-bottomleft mask -- ones mean occupied
+void find(int r, int col, int d1, int d2)
 {
-    struct {int r, j;} stk[100];
-    int nstk=0;
-    int i,j;
-    j=0;
+    if (r==n){ cnt++; return; }
 
-    while (1){
-        for (; j < n; j++){
-            if (col[j]||d1[r+j] || d2[n+r-j] || board[r][j]=='*') continue;
-            col[j] = 1;
-            d1[r+j] = 1;
-            d2[n+r-j] = 1;
+    // Notice the elegance :) ...
 
-            stk[nstk].r = r;
-            stk[nstk].j = j;
-            nstk++;
-            r++;
-            if (r< n){
-                j = -1; continue;
-            }
+    d1 >>= 1;
+    d2 <<= 1;
+    int m = board[r] & (~(col | d1 | d2)); 
 
-                cnt++; 
-                nstk--;
-                r--;
+    while (m){
+        //get least significant 1 bit
+        int c = m & (-m);
 
-            col[j] = 0;
-            d1[r+j] = 0;
-            d2[n+r-j] = 0;
-        }
+        find(r+1, col|c, d1|c, d2|c);
 
-                if (nstk==0)return;
-                nstk--;
-                j=stk[nstk].j;
-                r=stk[nstk].r;
-            col[j] = 0;
-            d1[r+j] = 0;
-            d2[n+r-j] = 0;
-            j++;
+        // remove that bit
+        m ^= c;
     }
 }
 
@@ -58,10 +46,15 @@ while (1){
     if (!n) break;
     int i,j;
     for(i=0;i<n;i++){
-        scanf("%s", &board[i][0]);
+        char s[90];
+        scanf("%s", s);
+        board[i]=0;
+        for (j=0;j < n;j++){
+            if (s[j]!='*')board[i] |= (1 << j);
+        }
     }
     cnt = 0;
-    find(0);
+    find(0, 0, 0, 0);
     printf("Case %d: %d\n",cc,cnt);cc++;
 }
 }
