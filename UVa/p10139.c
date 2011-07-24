@@ -1,3 +1,13 @@
+/**
+ Algorithm:
+ - Sieve and prime factorization
+
+Gotchas:
+- 1 divides everything
+- 0 does not divide anything
+- 0! == 1
+*/
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -53,9 +63,11 @@ init();
             // if m != 1 then m is prime
             if (m > n) div = false;
             else{
+                // check whether n! contains all
+                // prime factors of m
                 for (i=0;i<prc;i++){
-                    int p = pr[i];
-                    int c=cnt[i];
+                    int p = pr[i]; // prime factor
+                    int c=cnt[i];  // power of prime factor
                     ll j;
                     for (j=p; j <= n;j+=p){
                         ll j2 = j;
