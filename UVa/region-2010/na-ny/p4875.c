@@ -68,6 +68,7 @@ void print(int cc)
             char *s = "0123456789ABCDEF";
             out[outi ++] = s[(outb[i] >> 4 )& 15];
             out[outi++] = s[outb[i] & 15];
+            if ((i+1) % 40==0) out[outi++]='\n';
         }
         out[outi] = 0;
         printf("%s\n",out);
