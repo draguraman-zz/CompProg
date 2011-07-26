@@ -70,8 +70,9 @@ void print(int cc)
             out[outi++] = s[outb[i] & 15];
             if ((i+1) % 40==0) out[outi++]='\n';
         }
+        if (outlen % 40!=0) out[outi++]='\n';
         out[outi] = 0;
-        printf("%s\n",out);
+        printf("%s",out);
 }
 
 int main()
