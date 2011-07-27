@@ -20,30 +20,47 @@ void doit()
 {
     dbl l = 0;
     dbl r = 1;
+    dbl lv = eqn(l);
+    dbl rv=eqn(r);
+    dbl ls = sgn(lv);
+    dbl rs = sgn(rv);
+    if (ls !=rs){
+        
+        while (1){
+            if (r-l < 0.00000001) break;
+            dbl mid = (l+r)/2;
+            dbl v = eqn(mid);
+            dbl s = sgn(v);
+            if (s == ls){ l=mid;ls=s; }
+            if (s == rs){ r=mid;rs=s; }
+
+        }
+        printf("%.4lf\n", (l+r)/2);return;
+    }
+        
+int c=0;
     while (1)
     {
-        l = max(0,l);
+        l=max(0,min(l,1));
         r = min(1,r);
+        if ((r-l) < 0.00000001) break;
         dbl incre = (r-l)/200;
-        dbl oldl = l;
-        dbl oldr = r;
         dbl mindiff = DBL_MAX;
         dbl v = l;
-        dbl oldrv = eqn(r);
-        dbl stop = min(1,oldr+2*incre);
+        dbl stop = min(1, r+incre);
+
         while (v <= stop){
             v += incre;
             dbl val = eqn(v);
-            dbl diff = abs(val);
+            dbl diff = fabs(val);
             if (diff < mindiff){mindiff = diff; 
             l=v-incre;
             r=v+incre;}
         }
-        if (abs(r-l) < 0.000001 && abs(eqn(r)-oldrv)<0.00001) break;
     }
     
-    if (abs(eqn(r))<0.0001){
-        printf("%.4lf\n", r);
+    if (abs(eqn(r))<0.00001){
+        printf("%.4lf\n",  r);
         }
         else printf("No solution\n");
 }
