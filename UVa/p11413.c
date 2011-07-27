@@ -1,34 +1,63 @@
+/**
+ * Algorithm:
+ * Binary search on capacity
+ *
+ * A summary of the description if you're confused:
+ * Basically find the min of max sum of the partition of a row of numbers
+ * Eg: Given a row of integers 1,2,3,4 ... etc.
+ * Partition them into groups : (1,2) (3,4, 5) , ... , (...) without any left over
+ * Let k = max(sum of any of the group)
+ * Find min(k) of all possible partitions
+ *
+ * Gotchas:
+ * - Not all containers must be used. Some can be unused.
+ *   This is implied by the fact that max(m) > max(n)
+ * */
 
+#include<stdlib.h>
+#include<string.h>
 #include<stdio.h>
-#include<iostream>
-using namespace std;
-#define FOR(i,n) for(int i=0;i<n;++i)
-int  in[1024],n,m;
-bool f(int  S){
-    int  C=0;
-    int  s=0;
-    FOR(i,n){
-        if(s+in[i]>S )s=in[i],C++;
-        else s+=in[i];
-    }
-    C++;
-    if(C<=m)return true;
-    else return false;
-}
-int main(){
-    //freopen("in.txt","r",stdin);
-    while(scanf("%d%d",&n,&m)>0 ){
-        FOR(i,n)scanf("%d",&in[i] );
-        int Sum=0;
-        FOR(i,n)Sum+=in[i];
-        int  l=2147483647,r=Sum+1;
-        FOR(i,n)l=min(l,in[i] );
-        while(l<r){
-            int  mid=(r+l)/2;
-            if( f(mid)==true )r=mid;
-            else l=mid+1;
+int  v[1024],n,m;
+
+// test whether limit is possible by trying to form a solution
+// with the max <= limit
+bool poss(int limit){
+    int  cnt=1; // # of containers needed
+    int  s=0;   // current run
+    int i,j;
+    for (i=0;i<n;i++){
+        if(s+v[i]> limit ){ 
+            s=v[i]; cnt++; 
+            if (cnt > m ) return false;
         }
-        printf("%d\n",l);
+        else s+=v[i];
     }
-    return 0;
+
+    return true;
+}
+
+int main(){
+
+    while(9){
+        int k = scanf("%d%d",&n,&m);
+        if (k!=2)break;
+        int i,j;
+        int l=0,r; // low and upp bounds
+                   // low=max(v[i]), upp = sum(v[i])
+        int sum = 0;
+        for (i=0;i<n;i++){
+            
+            scanf("%d", & v[i]);
+            sum+=v[i];
+            if (v[i] > l) l = v[i];
+        }
+
+        r = sum;
+        while (l<r){
+            int mid =(l+r)/2;
+            if (poss(mid)) r = mid;
+            else l = mid+1;
+        }
+        printf("%d\n",r);
+    }
 }
