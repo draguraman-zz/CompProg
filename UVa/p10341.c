@@ -1,3 +1,8 @@
+/**
+ * Algorithm:
+ * Bisection method + Interval deepening
+ *
+ **/
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -15,7 +20,6 @@ inline int sgn(dbl x){
 }
 inline dbl min(dbl x, dbl y){ return x<y ? x : y; }
 inline dbl max(dbl x, dbl y){ return x>y ? x : y; }
-inline dbl abs(dbl x){ return x>0? x : -x; }
 void doit()
 {
     dbl l = 0;
@@ -25,7 +29,7 @@ void doit()
     dbl ls = sgn(lv);
     dbl rs = sgn(rv);
     if (ls !=rs){
-        
+        // bisection method
         while (1){
             if (r-l < 0.00000001) break;
             dbl mid = (l+r)/2;
@@ -35,9 +39,11 @@ void doit()
             if (s == rs){ r=mid;rs=s; }
 
         }
-        printf("%.4lf\n", (l+r)/2);return;
+        printf("%.4lf\n", l);return;
     }
-        
+    
+    // This part handles the case where the curve is
+    // a tangent to the x-axis. Not sure whether this can happen..
 int c=0;
     while (1)
     {
@@ -59,7 +65,7 @@ int c=0;
         }
     }
     
-    if (abs(eqn(r))<0.00001){
+    if (fabs(eqn(r))<0.00001){
         printf("%.4lf\n",  r);
         }
         else printf("No solution\n");
