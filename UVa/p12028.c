@@ -1,17 +1,21 @@
+/**
+ * Algorithm:
+ * Sorting
+ *
+ * */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-long long a[100002];
-long long k,c;
+typedef long long ll ;
+
+int a[100002];
+int k,c;
 int n;
 
 int comp(const void *a, const void * b)
 {
-    long long k= *(long long*) a - *(long long*) b;
-    if (k<0) return -1;
-    if (k >0) return 1;
-    return 0;
+    return  *(int*) a - *(int*) b;
 }
 
 int main()
@@ -21,26 +25,29 @@ int main()
         scanf("%d",&nu);
         while (nu--)
         {
-            scanf("%lld%lld%d%lld", &k, &c, &n, &a[0]);
+            scanf("%d%d%d%d", &k, &c, &n, &a[0]);
             k %= 1000007;
             c %= 1000007;
             
             int i;
-            long long ts = a[0];
+            ll ts =a[0]; // total sum
             for (i=1; i < n;i++){
-                a[i] =  ((k * a[i-1] )% 1000007+ c) % 1000007;
+                a[i] =  (((ll)k * a[i-1] )% 1000007+ c) % 1000007;
                 ts += a[i];
             }
-            
-                qsort( a,n,sizeof(long long), comp );
-                
-            long long sum = 0;
-            for (i=0;i<n;i++){
-                ts -= a[i];
-                sum += ts - a[i]*(n-i-1);               
-            }
 
-            printf("Case %d: %lld\n", casen, sum);
+            qsort(a,n,sizeof(int),comp);
+
+            ll ans =0; // abs diff between all pairs
+            ll bb = 0;
+            for (i=0;i<n;i++){
+                
+                ll v = a[i];
+                ans += v*i-bb + (ts - (n-i)*v);
+                ts-=v;
+                bb+=v;
+            }
+            printf("Case %d: %lld\n", casen, ans/2);
             casen++;
         }
 
