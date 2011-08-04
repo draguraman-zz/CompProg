@@ -1,3 +1,11 @@
+/**
+ * Algorithm:
+ * DP for LIS and LDS
+ *
+ * Vector is used since I don't know how many buildings there will be..
+ *
+ */
+
 #include<string.h>
 #include<stdio.h>
 #include<vector>

@@ -1,3 +1,18 @@
+/**
+ * Algorithm:
+ * DP
+ * Find the LIS and LDS starting at each index i
+ * Then find max(lis[i] + lds[i] - 1) for each i
+ *
+ * Theory:
+ * Let car X be the longest train's first car. First refers to the very 
+ * first car that forms the train. X obviously must be somewhere in the
+ * queue of cars. Any car that goes to the front/behind 
+ * of X in the train must come after X in the queue of cars.
+ * Since the cars in the train must be sorted, and we are allowed to 
+ * skip cars in the queue, the longest train is effectively 
+ * the LIS and LDS (starting at X) combined.
+ */
 #include<string.h>
 #include<stdio.h>
 
@@ -38,8 +53,6 @@ void doit()
     printf("%d\n", max);
 }
 
-
-
 int main(){
     int nu;
     scanf ("%d",&nu);
@@ -50,3 +63,4 @@ int main(){
         doit();
     }
 }
+
