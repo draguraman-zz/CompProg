@@ -1,3 +1,8 @@
+/**
+ * Algorithm:
+ * Brute force generate all drive ratios
+ *
+ */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
