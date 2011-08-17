@@ -1,6 +1,11 @@
 /**
 Algorithm:
-Brute force + Depth first search
+Brute force + Breadth first search
+
+Depth first search would totally suffice but I just wanted
+to improve the timing.
+
+The code is more complicated than necessary to improve performance
 
 Delete each node and check dominators
 */
@@ -10,17 +15,27 @@ Delete each node and check dominators
 int adj[102][102];
 int n;
 int nei[102];
-char visited[102];
+int visited[103][103]; // visited[i+1][j] == gen iff j is reachable when i is deleted
+int gen; // generation
+int q[102];
 
 // simple DFS
-void find(int cur){
+void find(int*visited){
     int i,j;
-    if (visited[cur]) return;
-        visited[cur] =1;
-    int cnt = nei[cur];
-    for (i=0;i<cnt;i++){
-        int nxt = adj[cur][i];
-        find(nxt);
+    int qcur=0;
+    int qsize = 1;
+    q[0] = 0;
+    visited[0]=gen;
+    while (qcur < qsize){
+            int cur = q[qcur];
+            int cnt = nei[cur];
+            for (i=0;i<cnt;i++){
+                int nxt = adj[cur][i];
+                if (visited[nxt]==gen) continue;
+                visited[nxt]=gen;
+                q[qsize++]=nxt;
+            }
+            qcur++;
     }
 }
 
@@ -43,28 +58,20 @@ int main(){
                 adj[i][nei[i]++] = j;
             }
         }
-
+        
+        gen++;
         // find all nodes reachable from 0
-        char reach[102];
-        memset(visited,0,sizeof(visited));
-        find(0);
-        memcpy(reach,visited, sizeof(reach));
-        memset(dom,0,sizeof(dom));
-
+        find(&visited[0][0]);
+        visited[1][0]=-1;
+        
         // delete each node and find nodes that are reachable
-        for (i=0;i< n;i++){
-            if (! reach[i]) continue;
-
-            // "delete" node i
-            memset(visited,0,sizeof(visited));
-            visited[i]=1;find(0);visited[i]=0;    
-
-            // if node p is reachable but not now, then 
-            // node i is dominator
-            for (int p = 0; p <n;p++){
-                if (reach[p] && !visited[p])
-                {dom[i][p]=1;}
-            }
+        for (i=1;i< n;i++){
+    
+            // "delete" node i and do BFS
+           visited[i+1][i] = gen;
+            find(&visited[i+1][0]);
+            visited[i+1][i]--;
+            visited[1][i] = -1;
         }
 printf("Case %d:\n",cc++);
         for (i=0;i<n;i++){
@@ -72,7 +79,9 @@ printf("Case %d:\n",cc++);
             printf("+%s+\n",dash);
             dash[2*n-1]='-';
             for (j=0;j<n;j++){
-              printf("|%c", dom[i][j] ? 'Y' :'N');  
+              printf("|%c", 
+              // output Y iff reachable previously but not when i is deleted
+                (visited[0][j]==gen&&visited[i+1][j]!=gen) ? 'Y' :'N');  
             }
             printf("|\n");
 
