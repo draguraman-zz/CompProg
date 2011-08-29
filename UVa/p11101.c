@@ -1,3 +1,12 @@
+/**
+* Algorithm:
+* Breadth first search
+*
+*
+* Do a BFS from the points of perimeter of one mall until you reach
+* a point of the other mall.
+*/
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -9,7 +18,7 @@ struct cell_t{ int r,c,d; };
 
 deque<cell_t> q;
 
-char map[2002][2002/32+1];
+int map[2002][2002/32+1];
 char visited[2002][2002];
 
 inline bool get(int r, int c){ return (map[r][c/32] & (1<<(c%32)))>0; }
