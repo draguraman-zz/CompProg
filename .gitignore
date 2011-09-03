@@ -3,3 +3,5 @@ fb/*
 *.out
 *.exe
 *.class
+*.dat
+*.diff
