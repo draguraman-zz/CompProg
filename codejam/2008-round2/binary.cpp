@@ -1,11 +1,15 @@
+/**
+ * Algorithm:
+ * Simple DP
+ */
+
 #include<stdlib.h>
 #include<stdio.h>
 #include<string.h>
 #include <iostream>
 using namespace std;
 
-const int AND = 1;
-const int OR  = 0;
+const int AND=1;
 
 struct node{
     int canChange;

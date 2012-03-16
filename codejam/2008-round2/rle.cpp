@@ -1,3 +1,7 @@
+/**
+ * Algorithm:
+ * Model the permutation as a Hamilton cycle
+ */
 #include<iostream>
 #include<string.h>
 using namespace std;

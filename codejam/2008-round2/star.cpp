@@ -1,3 +1,7 @@
+/**
+ * Algorithm:
+ * Binary search + inequalities
+ */
 #include<stdio.h>
 #include<iostream>
 #include<string.h>
@@ -9,6 +13,7 @@ int y[10000];
 int z[10000];
 int p[100000];
 
+// whether [a,b] intersects with [c,d]
 bool inter(double a, double b, double c, double d){
 
     double t = a;
@@ -21,6 +26,8 @@ bool inter(double a, double b, double c, double d){
             (c <= a && a <= d) ||
             (a <= c && c <= b);
 }
+
+// whether power pp works
 bool can(double pp, int t){
     double A=-1e99,B=1e99,C=-1e99,D=1e99,E=-1e99,F=1e99,G=-1e99,H=1e99;
     for (int i = 0; i < t; i++){
