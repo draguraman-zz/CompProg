@@ -1,3 +1,17 @@
+/**
+ * Algorithm: 
+ * Pure simple math.
+ * All (h,w) pairs that satisfy the two respective ranges must necessarily
+ * form a rectangle. A pair is in the rect iff it is a bird.
+ * First form the smallest rect that contains all bird points.
+ * Then for each untested bird point, check whether it is in the 
+ * original rect. If it is, then it is a bird. 
+ * Otherwise, extend the original rect to form a
+ * new rect and test whether the new rect contains any non-bird point.
+ * If it does, then the untested point is a non-bird; otherwise it is
+ * unknown.
+ *
+ */
 #include<iostream>
 #include<stdlib.h>
 #include<algorithm>
