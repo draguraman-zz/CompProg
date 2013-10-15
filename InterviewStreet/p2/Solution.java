@@ -91,7 +91,7 @@ long s2 = System.currentTimeMillis();
         }
 
 long s1 = System.currentTimeMillis();
-System.out.println(s1-s2);
+//System.out.println(s1-s2);
 
         // O(n log n)
         Arrays.sort(nums, new Comparator<Raw>(){
@@ -105,7 +105,7 @@ System.out.println(s1-s2);
         });
 
         long e1 = System.currentTimeMillis();
-        System.out.println(e1-s1);
+//        System.out.println(e1-s1);
 
  s1 = System.currentTimeMillis();
 
@@ -130,7 +130,7 @@ System.out.println(s1-s2);
         }
 
         e1 = System.currentTimeMillis();
-        System.out.println(e1-s1);
+//        System.out.println(e1-s1);
         for (int i=0; i < m.length; i++)
         {
             for (int j = 1; j < m[i].length; j++)
@@ -187,6 +187,6 @@ System.out.println(s1-s2);
         }
 
  s1 = System.currentTimeMillis();
-System.out.println(s1-e1);
+//System.out.println(s1-e1);
 }
 }
