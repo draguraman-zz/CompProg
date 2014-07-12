@@ -8,7 +8,7 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
 
-public class p823 extends  JPanel implements MouseListener,
+public class p823_tool extends  JPanel implements MouseListener,
        MouseMotionListener
 {
 /*
@@ -87,8 +87,8 @@ double x, double y, double r, double x1, double y1, double x2, double y2)
 	);
 }
 
-// circle 1 : radius r1 
-// circle 2 : radius r2 
+// circle 1 : radius r1
+// circle 2 : radius r2
 // distance dd between their centers
 private boolean circlesIntersect(double r1, double r2, double dd)
 {
@@ -117,23 +117,23 @@ double cross(double a, double b, double c, double d)
 }
 
 boolean sameSide(
-double p1x, double p1y, 
+double p1x, double p1y,
 double p2x, double p2y,
 double ax, double ay,
 double bx,double by){
 
-	double cp1 = cross(bx-ax, by-ay, p1x-ax,p1y-ay);	
-	double cp2 = cross(bx-ax, by-ay, p2x-ax,p2y-ay);	
+	double cp1 = cross(bx-ax, by-ay, p1x-ax,p1y-ay);
+	double cp2 = cross(bx-ax, by-ay, p2x-ax,p2y-ay);
 	if (cp1*cp2 >= 0.0) return true;
 	return false;
 }
 
 boolean inTri(
 double x, double y,
-double ax, double ay, 
+double ax, double ay,
 double bx, double by,
 double cx, double cy){
-	
+
 	if (
 	sameSide(x,y,ax,ay,bx,by,cx,cy) &&
 	sameSide(x,y,bx,by,ax,ay,cx,cy) &&
@@ -160,7 +160,7 @@ double cx, double cy){
 	double h = big[1]/2 / sin(gamma);
 	y[1] = a*sin(alpha*2) - h*cos(e);
 	x[1] = a*cos(alpha*2) - h *sin(e);
-	
+
 	//check inter with side c
 	if (circleLineInter(x[1],y[1],big[1]/2.0,0,0,
 		c,0)) return false;
@@ -170,12 +170,12 @@ double cx, double cy){
 	double beta = acos((c*c+b*b-a*a)/(2*c*b))/2;
 	y[2] = big[2]/2;
 	x[2] = c-y[2]/tan(beta);
-	
+
 
 	if (circleLineInter(x[2],y[2],big[2]/2.0,t1,t2,
 		0,0)) return false;
 
-	
+
 	if (cc(1,2)) return false;
 	if (cc(0,2)) return false;
 
@@ -254,16 +254,16 @@ double cx, double cy){
             if (dd < 5) { sel =i; break;}
         }
     }
-        
+
     public void mouseReleased(MouseEvent e) {
         down=false;
         sel= -1;
     }
-            
+
     public void mouseMoved(MouseEvent e) {
 
     }
-                
+
     public void mouseDragged(MouseEvent e) {
         if (!down) return;
         Graphics g = getGraphics();
@@ -292,10 +292,10 @@ double cx, double cy){
     }
     public void mouseEntered(MouseEvent e) {
     }
-                
+
     public void mouseExited(MouseEvent e) {
     }
-                    
+
     public void mouseClicked(MouseEvent e) {
     }
 
